@@ -13,7 +13,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     Geofence.initialize();
     Geofence.requestPermissions();
-    throw Exception("test 123!");
   }
 
   @override
@@ -21,21 +20,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
         body: Container(
       child: Center(
-        child: Column(
-          children: [
-            Column(
+        child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                    onPressed: () =>
-                        Geofence.getCurrentLocation().then((coordinate) {
-                          print(
-                              "Your latitude is ${coordinate!.latitude} and longitude ${coordinate!.longitude}");
-                        }),
-                    child: Text("Rozpocznij"))
+                    onPressed: () => print("TODO: Start the tracking"),
+                    child: const Text("Rozpocznij"))
               ],
-            )
-          ],
-        ),
+            )),
       ),
     ));
   }

@@ -16,7 +16,7 @@ class ErrorPage extends StatelessWidget {
         Icon(Icons.error_outline, color: Colors.red[400], size: 52),
         Text("Błąd", style: TextStyle(color: Colors.red[400], fontSize: 52)),
         Text(error ?? "Nieznany błąd",
-            style: TextStyle(color: Colors.black, fontSize: 24))
+            style: const TextStyle(color: Colors.black, fontSize: 24))
       ],
     )));
   }
