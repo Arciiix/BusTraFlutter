@@ -27,7 +27,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 ElevatedButton(
                     onPressed: () => print("TODO: Start the tracking"),
-                    child: const Text("Rozpocznij"))
+                    child: const Text("Rozpocznij")),
+                ElevatedButton(
+                    onPressed: () =>
+                        Navigator.pushNamed(context, "/addBusStop"),
+                    child: const Text("Dodaj przystanek"))
               ],
             )),
       ),

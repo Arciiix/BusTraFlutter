@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:bustra/home_screen.dart';
+import 'package:bustra/bus_stop_form.dart';
 import 'package:bustra/error.dart';
 import 'package:bustra/utils/get_permissions.dart';
 
@@ -36,7 +37,10 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       initialRoute: '/',
-      routes: {"/": (contex) => HomeScreen()},
+      routes: {
+        "/": (contex) => HomeScreen(),
+        "/addBusStop": (contex) => BusStopForm()
+      },
     );
   }
 }
