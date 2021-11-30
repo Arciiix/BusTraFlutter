@@ -81,7 +81,7 @@ class _BusStopFormState extends State<BusStopForm> {
   }
 
   bool validateWholeForm() {
-    return _formKey.currentState!.validate() ? true : false;
+    return _formKey.currentState!.validate();
   }
 
   @override
