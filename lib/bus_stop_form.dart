@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:latlong2/latlong.dart';
 
 class BusStopForm extends StatefulWidget {
   @override
@@ -44,6 +45,40 @@ class _BusStopFormState extends State<BusStopForm> {
       clipboardContent = clipboardContent.replaceAll(",", ".");
       return clipboardContent;
     }
+  }
+
+  Future<LatLng?> pasteFullCoordinates() async {
+    String? clipboardData = await getClipboardData();
+    if (clipboardData == null || clipboardData.isEmpty) {
+      showSnackBar("Pusty schowek");
+      return null;
+    }
+
+    List<String> clipboardCoordinates = clipboardData.split(", ");
+    if (clipboardCoordinates.length != 2) {
+      showSnackBar("Zły format koordynatów");
+      return null;
+    } else {
+      if (isNumeric(clipboardCoordinates[0]) &&
+          isNumeric(clipboardCoordinates[1]) &&
+          validateLatitude(clipboardCoordinates[0]) == null &&
+          validateLatitude(clipboardCoordinates[1]) == null) {
+        //When it comes to the validateLatitude function, null means that it is valid - non-null value (string) means an error - the function returns its description
+        LatLng parsedCoordinates = LatLng(double.parse(clipboardCoordinates[0]),
+            double.parse(clipboardCoordinates[1]));
+        return parsedCoordinates;
+      } else {
+        showSnackBar("Niepoprawne koordynaty");
+        return null;
+      }
+    }
+  }
+
+  bool isNumeric(String? text) {
+    if (text == null) {
+      return false;
+    }
+    return double.tryParse(text) != null;
   }
 
   String? validateLatitude(String? value) {
@@ -179,7 +214,20 @@ class _BusStopFormState extends State<BusStopForm> {
                         Padding(
                             padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
-                                onPressed: () => print("PASTE FULL 1"),
+                                onPressed: () async {
+                                  LatLng? coordinates =
+                                      await pasteFullCoordinates();
+                                  if (coordinates != null) {
+                                    setState(() {
+                                      _destinationBusStopLatitudeController
+                                              .text =
+                                          coordinates.latitude.toString();
+                                      _destinationBusStopLongitudeController
+                                              .text =
+                                          coordinates.longitude.toString();
+                                    });
+                                  }
+                                },
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -251,7 +299,18 @@ class _BusStopFormState extends State<BusStopForm> {
                         Padding(
                             padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
-                                onPressed: () => print("PASTE FULL 2"),
+                                onPressed: () async {
+                                  LatLng? coordinates =
+                                      await pasteFullCoordinates();
+                                  if (coordinates != null) {
+                                    setState(() {
+                                      _previousBusStopLatitudeController.text =
+                                          coordinates.latitude.toString();
+                                      _previousBusStopLongitudeController.text =
+                                          coordinates.longitude.toString();
+                                    });
+                                  }
+                                },
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
