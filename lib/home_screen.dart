@@ -1,3 +1,4 @@
+import 'package:bustra/select_bus_stop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_geofence/Geolocation.dart';
 import 'package:flutter_geofence/geofence.dart';
@@ -15,6 +16,21 @@ class _HomeScreenState extends State<HomeScreen> {
     Geofence.requestPermissions();
   }
 
+  void _selectBusStop(BuildContext context) async {
+    var instance = await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => new SelectBusStop(),
+            fullscreenDialog: true));
+
+    if (instance != null) {
+      print("SELECTED: ");
+      print(instance);
+    } else {
+      print("NOTHING SELECTED");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                //TODO: Change the button to a widget that displays the selected bus stop
+                ElevatedButton(
+                    onPressed: () => _selectBusStop(context),
+                    child: const Text("Wybierz przystanek")),
                 ElevatedButton(
                     onPressed: () => print("TODO: Start the tracking"),
                     child: const Text("Rozpocznij")),

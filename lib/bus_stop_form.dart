@@ -1,3 +1,5 @@
+import 'package:bustra/models/bus_stop.dart';
+import 'package:bustra/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
@@ -111,7 +113,20 @@ class _BusStopFormState extends State<BusStopForm> {
 
   void handleSave() {
     if (validateWholeForm()) {
-      print("DEV - SAVE");
+      if (!isEditing) {
+        final busStopObj = BusStop()
+          ..name = _nameController.text
+          ..destinationBusStopLatitude =
+              double.parse(_destinationBusStopLatitudeController.text)
+          ..destinationBusStopLongitude =
+              double.parse(_destinationBusStopLongitudeController.text)
+          ..previousBusStopLatitude =
+              double.parse(_previousBusStopLatitudeController.text)
+          ..previousBusStopLongitude =
+              double.parse(_previousBusStopLongitudeController.text);
+        final transaction = Transactions.getBusStop();
+        transaction.add(busStopObj);
+      }
     }
   }
 
