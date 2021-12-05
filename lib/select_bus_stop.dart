@@ -98,7 +98,6 @@ class SelectBusStop extends StatelessWidget {
                                   busStop.name ?? "",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                    //TODO: Fix: the text mustn't overflow the screen
                                     fontSize: 24,
                                   ),
                                 ),
