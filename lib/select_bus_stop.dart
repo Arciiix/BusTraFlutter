@@ -10,6 +10,7 @@ class SelectBusStop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         child: Scaffold(
+      appBar: AppBar(title: const Text("Wybierz przystanek")),
       body: ValueListenableBuilder<Box<BusStop>>(
           valueListenable: Transactions.getBusStop().listenable(),
           builder: (context, box, _) {
@@ -42,18 +43,79 @@ class SelectBusStop extends StatelessWidget {
   }
 
   Widget buildBusStop(BuildContext context, BusStop busStop) {
-    return InkWell(
-        onTap: () {
-          Navigator.pop(context, busStop);
-        },
-        child: Card(
-            color: Colors.white,
+    //TODO: Make the card display the name, destination bus stop, previous bus stop and the edit and delete button (and make them work)
+    return Padding(
+        padding: EdgeInsets.all(10),
+        child: InkWell(
+            onTap: () => Navigator.pop(context, busStop),
             child: Row(
-              //TODO: Make the card display the name, destination bus stop, previous bus stop and the edit and delete button (and make them work)
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  busStop.name ?? "",
-                ),
+                Expanded(
+                    flex: 9,
+                    child: Row(
+                      children: [
+                        Expanded(
+                            flex: 4,
+                            child: Padding(
+                                padding: EdgeInsets.all(2),
+                                child: Chip(
+                                  label: Text(
+                                    //Think what to do if text overflows
+                                    "LABEL",
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))),
+                        Expanded(
+                            flex: 7,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  busStop.name ?? "",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    //TODO: Fix - the text musn't overflow the screen
+                                    fontSize: 24,
+                                  ),
+                                ),
+                                Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Row(children: [
+                                        Icon(Icons.label_outlined),
+                                        Text(
+                                          "${busStop.destinationBusStopLatitude}, ${busStop.destinationBusStopLongitude}",
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ]),
+                                      Row(children: [
+                                        Icon(Icons.flag_outlined),
+                                        Text(
+                                          "${busStop.previousBusStopLatitude}, ${busStop.previousBusStopLongitude}",
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ])
+                                    ])
+                              ],
+                            )),
+                      ],
+                    )),
+                Expanded(
+                    flex: 3,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => print("DELETE"),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.edit),
+                          onPressed: () => print("EDIT"),
+                        ),
+                      ],
+                    ))
               ],
             )));
   }
