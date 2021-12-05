@@ -6,7 +6,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:bustra/models/bus_stop.dart';
 
 import 'package:bustra/home_screen.dart';
-import 'package:bustra/bus_stop_form.dart';
 import 'package:bustra/error.dart';
 import 'package:bustra/utils/get_permissions.dart';
 
@@ -57,7 +56,6 @@ class _MyAppState extends State<MyApp> {
       initialRoute: '/',
       routes: {
         "/": (contex) => HomeScreen(),
-        "/addBusStop": (contex) => BusStopForm()
       },
     );
   }

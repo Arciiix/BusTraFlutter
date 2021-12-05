@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
             padding: EdgeInsets.all(8),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //TODO: Change the button to a widget that displays the selected bus stop
                 ElevatedButton(
@@ -48,10 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ElevatedButton(
                     onPressed: () => print("TODO: Start the tracking"),
                     child: const Text("Rozpocznij")),
-                ElevatedButton(
-                    onPressed: () =>
-                        Navigator.pushNamed(context, "/addBusStop"),
-                    child: const Text("Dodaj przystanek"))
               ],
             )),
       ),

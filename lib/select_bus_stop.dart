@@ -1,3 +1,4 @@
+import 'package:bustra/bus_stop_form.dart';
 import 'package:bustra/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -5,12 +6,32 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import 'models/bus_stop.dart';
 
+import "package:bustra/utils/show_snackbar.dart";
+
 class SelectBusStop extends StatelessWidget {
+  Future<void> _createBusStop(BuildContext context) async {
+    BusStop? busStop = await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => new BusStopForm(),
+            fullscreenDialog: true));
+
+    if (busStop != null) {
+      final transaction = Transactions.getBusStop();
+      transaction.add(busStop);
+      showSnackBar(context, "Dodano nowy przystanek!");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
         child: Scaffold(
       appBar: AppBar(title: const Text("Wybierz przystanek")),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => _createBusStop(context),
+      ),
       body: ValueListenableBuilder<Box<BusStop>>(
           valueListenable: Transactions.getBusStop().listenable(),
           builder: (context, box, _) {
@@ -70,13 +91,14 @@ class SelectBusStop extends StatelessWidget {
                         Expanded(
                             flex: 7,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   busStop.name ?? "",
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                    //TODO: Fix - the text musn't overflow the screen
+                                    //TODO: Fix: the text mustn't overflow the screen
                                     fontSize: 24,
                                   ),
                                 ),

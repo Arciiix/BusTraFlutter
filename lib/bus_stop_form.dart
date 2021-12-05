@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 
+import "package:bustra/utils/show_snackbar.dart";
+
 class BusStopForm extends StatefulWidget {
   @override
   State<BusStopForm> createState() => _BusStopFormState();
@@ -24,10 +26,8 @@ class _BusStopFormState extends State<BusStopForm> {
   final TextEditingController _previousBusStopLongitudeController =
       TextEditingController();
 
-  void showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(message),
-    ));
+  void _showSnackBar(String message) {
+    showSnackBar(context, message);
   }
 
   Future<String?> getClipboardData() async {
@@ -52,13 +52,13 @@ class _BusStopFormState extends State<BusStopForm> {
   Future<LatLng?> pasteFullCoordinates() async {
     String? clipboardData = await getClipboardData();
     if (clipboardData == null || clipboardData.isEmpty) {
-      showSnackBar("Pusty schowek");
+      _showSnackBar("Pusty schowek");
       return null;
     }
 
     List<String> clipboardCoordinates = clipboardData.split(", ");
     if (clipboardCoordinates.length != 2) {
-      showSnackBar("Zły format koordynatów");
+      _showSnackBar("Zły format koordynatów");
       return null;
     } else {
       if (isNumeric(clipboardCoordinates[0]) &&
@@ -70,7 +70,7 @@ class _BusStopFormState extends State<BusStopForm> {
             double.parse(clipboardCoordinates[1]));
         return parsedCoordinates;
       } else {
-        showSnackBar("Niepoprawne koordynaty");
+        _showSnackBar("Niepoprawne koordynaty");
         return null;
       }
     }
@@ -85,7 +85,7 @@ class _BusStopFormState extends State<BusStopForm> {
 
   String? validateLatitude(String? value) {
     if (value == null || value.isEmpty) {
-      return "Wartość nie może być pusta.";
+      return "Wartość nie może być pusta";
     }
     final RegExp latitudeRegExp =
         RegExp(r"^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)$");
@@ -99,7 +99,7 @@ class _BusStopFormState extends State<BusStopForm> {
 
   String? validateLongitude(String? value) {
     if (value == null || value.isEmpty) {
-      return "Wartość nie może być pusta.";
+      return "Wartość nie może być pusta";
     }
     final RegExp longitudeRegExp =
         RegExp(r"^[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$");
@@ -111,7 +111,8 @@ class _BusStopFormState extends State<BusStopForm> {
     }
   }
 
-  void handleSave() {
+  void handleSave(BuildContext context) {
+    //TODO: Replace comma (,) with a dot (.) in the coordinates inputs
     if (validateWholeForm()) {
       if (!isEditing) {
         final busStopObj = BusStop()
@@ -124,8 +125,8 @@ class _BusStopFormState extends State<BusStopForm> {
               double.parse(_previousBusStopLatitudeController.text)
           ..previousBusStopLongitude =
               double.parse(_previousBusStopLongitudeController.text);
-        final transaction = Transactions.getBusStop();
-        transaction.add(busStopObj);
+
+        Navigator.pop(context, busStopObj);
       }
     }
   }
@@ -143,7 +144,7 @@ class _BusStopFormState extends State<BusStopForm> {
             IconButton(
               icon: const Icon(Icons.save),
               tooltip: "Zapisz",
-              onPressed: handleSave,
+              onPressed: () => handleSave(context),
             )
           ],
         ),
@@ -191,7 +192,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                           .text = content;
                                     });
                                     if (validateLatitude(content) != null) {
-                                      showSnackBar(
+                                      _showSnackBar(
                                           "Niepoprawna szerokość geograficzna!");
                                     }
                                   }
@@ -217,7 +218,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                             .text = content;
                                       });
                                       if (validateLongitude(content) != null) {
-                                        showSnackBar(
+                                        _showSnackBar(
                                             "Niepoprawna długość geograficzna!");
                                       }
                                     }
@@ -276,7 +277,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                           content;
                                     });
                                     if (validateLatitude(content) != null) {
-                                      showSnackBar(
+                                      _showSnackBar(
                                           "Niepoprawna szerokość geograficzna!");
                                     }
                                   }
@@ -302,7 +303,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                             .text = content;
                                       });
                                       if (validateLongitude(content) != null) {
-                                        showSnackBar(
+                                        _showSnackBar(
                                             "Niepoprawna długość geograficzna!");
                                       }
                                     }
@@ -334,6 +335,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                     ])))
                       ],
                     )),
+                //TODO: Add support for tags (see the selectBusStop screen)
               ])),
             )));
   }
