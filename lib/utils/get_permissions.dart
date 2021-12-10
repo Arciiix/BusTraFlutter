@@ -1,5 +1,6 @@
 import 'package:bustra/utils/exceptions.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 Future<void> getPermissions() async {
   print("DEBUG_PERMISSIONS:");
@@ -26,4 +27,20 @@ Future<void> getPermissions() async {
     throw PermissionException(
         "Nie zezwolono na dostęp do lokalizacji w tle - wejdź w ustawienia i przywróć wartości domyślne/zezwól na dostęp");
   }
+
+  bool areNotificationsAllowed =
+      await AwesomeNotifications().isNotificationAllowed();
+
+  print("Notifications: $areNotificationsAllowed");
+
+  if (!areNotificationsAllowed) {
+    await AwesomeNotifications().requestPermissionToSendNotifications();
+    await getPermissions();
+  }
+}
+
+Future<bool> isLocationInBackgroundGranted() async {
+  PermissionStatus backgroundLocationStatus =
+      await Permission.locationAlways.status;
+  return backgroundLocationStatus.isGranted;
 }

@@ -1,7 +1,11 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bustra/select_bus_stop.dart';
+import 'package:bustra/utils/generate_unique_id.dart';
+import 'package:bustra/utils/get_permissions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_geofence/Geolocation.dart';
-import 'package:flutter_geofence/geofence.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+//import 'package:flutter_geofence/Geolocation.dart';
+//import 'package:flutter_geofence/geofence.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -9,11 +13,49 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int? osVersion;
+
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   @override
   void initState() {
     super.initState();
+    /*
     Geofence.initialize();
     Geofence.requestPermissions();
+  */
+
+    _showNotificationWarn();
+  }
+
+  void _showNotificationWarn() async {
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    osVersion = androidInfo.version.sdkInt;
+    print("RUNNING ON SDK $osVersion");
+
+    if (osVersion! >= 30) {
+      if (!(await isLocationInBackgroundGranted())) {
+        AlertDialog notificationDialogAndroid11 = AlertDialog(
+          title: Text("Uprawnienia"),
+          content: Text(
+              'Android 11 nie umożliwia zezwolenia na lokalizację w tle z poziomu aplikacji. Wejdź w ustawienia swojego urządzenia i przy lokalizacji zaznacz "Zawsze"'),
+          actions: [
+            TextButton(
+                child: Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                })
+          ],
+        );
+
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return notificationDialogAndroid11;
+            });
+        //DEV
+        //TODO: Maybe throw an error?
+      }
+    }
   }
 
   void _selectBusStop(BuildContext context) async {
@@ -46,7 +88,21 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () => _selectBusStop(context),
                     child: const Text("Wybierz przystanek")),
                 ElevatedButton(
-                    onPressed: () => print("TODO: Start the tracking"),
+                    onPressed: () async {
+                      print("CREATE NOTIFICATION");
+                      AwesomeNotifications().createNotification(
+                          content: NotificationContent(
+                            id: generateUniqueId(),
+                            channelKey: 'bustra_notifications',
+                            title: 'Testowe powiadomienie',
+                            body: 'Lorem ipsum dolor sit amet',
+                          ),
+                          actionButtons: [
+                            NotificationActionButton(
+                                key: "STOP_TRACKING",
+                                label: "Przerwij trackowanie")
+                          ]);
+                    },
                     child: const Text("Rozpocznij")),
               ],
             )),

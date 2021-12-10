@@ -35,6 +35,8 @@ dependencies:
   latlong2: ^0.8.1
   hive: ^2.0.4
   hive_flutter: ^1.1.0
+  carp_background_location: ^3.0.1
+  device_info_plus: ^3.1.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

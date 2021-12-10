@@ -8,13 +8,37 @@ import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/home_screen.dart';
 import 'package:bustra/error.dart';
 import 'package:bustra/utils/get_permissions.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //Database
   await Hive.initFlutter();
   Hive.registerAdapter(BusStopAdapter());
   await Hive.openBox<BusStop>("busStops");
+
+  //Notifications
+  AwesomeNotifications().initialize(
+      //DEV
+      null,
+      [
+        NotificationChannel(
+            channelKey: 'bustra_notifications',
+            channelName: 'BusTra',
+            channelDescription: 'Powiadomienia aplikacji BusTra',
+            defaultColor: Colors.blue[400],
+            ledColor: Colors.white,
+            importance: NotificationImportance.Max),
+      ],
+      debug: true);
+
+  //Handle notifications tap
+  AwesomeNotifications()
+      .actionStream
+      .listen((ReceivedNotification receivedNotification) {
+    print("GOT NOTIFICATION; ID: ${receivedNotification.id}");
+  });
 
   runApp(const MyApp());
 }
