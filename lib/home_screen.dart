@@ -1,9 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bustra/select_bus_stop.dart';
+import 'package:bustra/tracking.dart';
 import 'package:bustra/utils/generate_unique_id.dart';
 import 'package:bustra/utils/get_permissions.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+
 //import 'package:flutter_geofence/Geolocation.dart';
 //import 'package:flutter_geofence/geofence.dart';
 
@@ -19,10 +21,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    /*
-    Geofence.initialize();
-    Geofence.requestPermissions();
-  */
+
+    //Geofence.initialize();
+    //Geofence.requestPermissions();
 
     _showNotificationWarn();
   }
@@ -89,19 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: const Text("Wybierz przystanek")),
                 ElevatedButton(
                     onPressed: () async {
-                      print("CREATE NOTIFICATION");
-                      AwesomeNotifications().createNotification(
-                          content: NotificationContent(
-                            id: generateUniqueId(),
-                            channelKey: 'bustra_notifications',
-                            title: 'Testowe powiadomienie',
-                            body: 'Lorem ipsum dolor sit amet',
-                          ),
-                          actionButtons: [
-                            NotificationActionButton(
-                                key: "STOP_TRACKING",
-                                label: "Przerwij trackowanie")
-                          ]);
+                      startTracking();
                     },
                     child: const Text("Rozpocznij")),
               ],
