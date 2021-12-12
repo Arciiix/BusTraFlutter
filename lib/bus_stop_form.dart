@@ -9,10 +9,14 @@ import "package:bustra/utils/show_snackbar.dart";
 class BusStopForm extends StatefulWidget {
   @override
   State<BusStopForm> createState() => _BusStopFormState();
+
+  final BusStop? baseBusStop;
+
+  const BusStopForm({Key? key, this.baseBusStop}) : super(key: key);
 }
 
 class _BusStopFormState extends State<BusStopForm> {
-  final bool isEditing = false;
+  bool isEditing = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -25,6 +29,25 @@ class _BusStopFormState extends State<BusStopForm> {
       TextEditingController();
   final TextEditingController _previousBusStopLongitudeController =
       TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.baseBusStop != null) {
+      isEditing = true;
+      _nameController.text = widget.baseBusStop!.name!;
+      _destinationBusStopLatitudeController.text =
+          widget.baseBusStop!.destinationBusStopLatitude.toString();
+      _destinationBusStopLongitudeController.text =
+          widget.baseBusStop!.destinationBusStopLongitude.toString();
+      _previousBusStopLatitudeController.text =
+          widget.baseBusStop!.previousBusStopLatitude.toString();
+      _previousBusStopLongitudeController.text =
+          widget.baseBusStop!.previousBusStopLongitude.toString();
+    } else {
+      isEditing = false;
+    }
+  }
 
   void _showSnackBar(String message) {
     showSnackBar(context, message);

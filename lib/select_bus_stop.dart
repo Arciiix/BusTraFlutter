@@ -8,8 +8,13 @@ import 'models/bus_stop.dart';
 
 import "package:bustra/utils/show_snackbar.dart";
 
-class SelectBusStop extends StatelessWidget {
-  Future<void> _createBusStop(BuildContext context) async {
+class SelectBusStop extends StatefulWidget {
+  @override
+  State<SelectBusStop> createState() => _SelectBusStopState();
+}
+
+class _SelectBusStopState extends State<SelectBusStop> {
+  Future<void> _createBusStop() async {
     BusStop? busStop = await Navigator.push(
         context,
         new MaterialPageRoute(
@@ -23,6 +28,49 @@ class SelectBusStop extends StatelessWidget {
     }
   }
 
+  Future<void> _deleteBusStop(BusStop stop) async {
+    AlertDialog removeConfirmation = AlertDialog(
+      title: const Text("Usuń przystanek"),
+      content: Text("Czy na pewno chcesz usunąć ${stop.name}?"),
+      actions: [
+        TextButton(
+            child: Text("Anuluj"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            }),
+        TextButton(
+            child: Text("Usuń"),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            })
+      ],
+    );
+
+    bool? userResponse = await showDialog<bool?>(
+        context: context,
+        builder: (BuildContext context) => removeConfirmation);
+
+    if (userResponse != null && userResponse) {
+      print("REMOVE BUS STOP WITH KEY ${stop.key}");
+      final transaction = Transactions.getBusStop();
+      transaction.delete(stop.key);
+    }
+  }
+
+  Future<void> _editBusStop(BusStop stop) async {
+    BusStop? editedBusStop = await Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (BuildContext context) => BusStopForm(baseBusStop: stop),
+            fullscreenDialog: true));
+
+    if (editedBusStop != null) {
+      final transaction = Transactions.getBusStop();
+      transaction.put(stop.key, editedBusStop);
+      showSnackBar(context, "Dodano nowy przystanek!");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,13 +78,12 @@ class SelectBusStop extends StatelessWidget {
       appBar: AppBar(title: const Text("Wybierz przystanek")),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => _createBusStop(context),
+        onPressed: () => _createBusStop(),
       ),
       body: ValueListenableBuilder<Box<BusStop>>(
           valueListenable: Transactions.getBusStop().listenable(),
           builder: (context, box, _) {
             final busStops = box.values.toList().cast<BusStop>();
-
             return buildList(busStops);
           }),
     ));
@@ -53,10 +100,10 @@ class SelectBusStop extends StatelessWidget {
       return Column(children: [
         Expanded(
             child: ListView.builder(
+                padding: EdgeInsets.only(bottom: 60),
                 itemCount: busStops.length,
                 itemBuilder: (BuildContext context, int index) {
                   final busStop = busStops[index];
-
                   return buildBusStop(context, busStop);
                 }))
       ]);
@@ -129,11 +176,11 @@ class SelectBusStop extends StatelessWidget {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.delete),
-                          onPressed: () => print("DELETE"),
+                          onPressed: () => _deleteBusStop(busStop),
                         ),
                         IconButton(
                           icon: const Icon(Icons.edit),
-                          onPressed: () => print("EDIT"),
+                          onPressed: () => _editBusStop(busStop),
                         ),
                       ],
                     ))

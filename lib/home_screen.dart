@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/select_bus_stop.dart';
 import 'package:bustra/tracking.dart';
 import 'package:bustra/utils/generate_unique_id.dart';
@@ -16,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? osVersion;
+
+  BusStop? selectedBusStop;
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   @override
@@ -67,8 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
             fullscreenDialog: true));
 
     if (instance != null) {
-      print("SELECTED: ");
-      print(instance);
+      setState(() {
+        selectedBusStop = instance;
+      });
+      print("SELECTED ${selectedBusStop?.name}");
     } else {
       print("NOTHING SELECTED");
     }
@@ -77,25 +82,48 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Expanded(
+              child: InkWell(
+                  customBorder: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  onTap: () => _selectBusStop(context),
+                  child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            selectedBusStop != null
+                                ? selectedBusStop?.name ??
+                                    "Przystanek bez nazwy"
+                                : "Wybierz przystanek",
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: false,
+                          )),
+                          Icon(
+                            Icons.expand_more,
+                          )
+                        ],
+                      )))),
+          actions: [
+            TextButton(
+              child: Text("ROZPOCZNIJ", style: TextStyle(color: Colors.white)),
+              onPressed: () => print("START_TRACKING"),
+            )
+          ],
+        ),
         body: Container(
-      child: Center(
-        child: Padding(
-            padding: EdgeInsets.all(8),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //TODO: Change the button to a widget that displays the selected bus stop
-                ElevatedButton(
-                    onPressed: () => _selectBusStop(context),
-                    child: const Text("Wybierz przystanek")),
-                ElevatedButton(
-                    onPressed: () async {
-                      startTracking();
-                    },
-                    child: const Text("Rozpocznij")),
-              ],
-            )),
-      ),
-    ));
+          child: Center(
+            child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text("Hello?")],
+                )),
+          ),
+        ));
   }
 }
