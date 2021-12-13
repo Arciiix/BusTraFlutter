@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:background_location/background_location.dart';
 import 'package:bustra/models/bus_stop.dart';
@@ -30,6 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   LatLng? _currPosition;
   double? _distanceToDestination;
+
+  int uptimeSec = 0;
+  String _parsedTime = "00:00";
 
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   @override
@@ -96,6 +101,15 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    uptimeSec = 0;
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_isTracking) {
+        _updateTime();
+      } else {
+        timer.cancel();
+      }
+    });
+
     Tracking.startTracking(
         LatLng(selectedBusStop!.destinationBusStopLatitude,
             selectedBusStop!.destinationBusStopLongitude),
@@ -117,6 +131,23 @@ class _HomeScreenState extends State<HomeScreen> {
       _currPosition = null;
       _isTracking = false;
     });
+  }
+
+  void _updateTime() {
+    setState(() {
+      uptimeSec++;
+      _parsedTime = getParsedTime();
+    });
+  }
+
+  String getParsedTime() {
+    int min = uptimeSec ~/ 60;
+    int sec = uptimeSec % 60;
+    return "${addZero(min)}:${addZero(sec)}";
+  }
+
+  String addZero(int value) {
+    return value < 10 ? "0${value.toString()}" : value.toString();
   }
 
   Widget buildMap() {
@@ -200,7 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 48)),
           Row(
             children: [
-              Expanded(child: SmallInfo(icon: Icons.timelapse, value: "00:00")),
+              Expanded(
+                  child: SmallInfo(icon: Icons.timelapse, value: _parsedTime)),
             ],
           )
         ]));
