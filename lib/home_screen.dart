@@ -50,6 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
       if (event.buttonKeyPressed == 'STOP_TRACKING' && _isTracking) {
         _stopTracking();
       }
+      if (event.buttonKeyPressed == "REMIND_ME" && _isTracking) {
+        //TODO: Set the seconds amount in settings
+        Future.delayed(const Duration(seconds: 5), () {
+          print("RESET NOTIFICATIONS");
+          Tracking.didSendNotification = false;
+          Tracking.didSendPreviousStopNotification = false;
+        });
+      }
     });
   }
 

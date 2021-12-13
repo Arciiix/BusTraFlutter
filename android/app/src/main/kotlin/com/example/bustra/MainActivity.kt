@@ -1,4 +1,4 @@
-package com.example.bustra
+package com.arciiix.bustra
 
 import io.flutter.embedding.android.FlutterActivity
 

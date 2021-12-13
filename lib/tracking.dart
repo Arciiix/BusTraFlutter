@@ -50,7 +50,9 @@ class Tracking {
               ),
               actionButtons: [
                 NotificationActionButton(
-                    key: "STOP_TRACKING", label: "Przerwij trackowanie")
+                    key: "STOP_TRACKING", label: "Przerwij trackowanie"),
+                NotificationActionButton(
+                    key: "REMIND_ME", label: "Przypomnij za chwilę")
               ]);
           didSendNotification = true;
         }
@@ -70,7 +72,9 @@ class Tracking {
               ),
               actionButtons: [
                 NotificationActionButton(
-                    key: "STOP_TRACKING", label: "Przerwij trackowanie")
+                    key: "STOP_TRACKING", label: "Przerwij trackowanie"),
+                NotificationActionButton(
+                    key: "REMIND_ME", label: "Przypomnij za chwilę")
               ]);
           didSendPreviousStopNotification = true;
         }
