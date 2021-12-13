@@ -106,7 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _currPosition = currPos;
         _distanceToDestination = distanceToDestination;
-        _mapController.move(currPos!, _mapController.zoom);
         _isTracking = true;
       });
     });
@@ -246,6 +245,18 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           ],
         ),
+        floatingActionButton: _isTracking
+            ? FloatingActionButton(
+                child: const Icon(Icons.gps_fixed),
+                onPressed: () {
+                  if (_currPosition != null) {
+                    setState(() {
+                      _mapController.move(_currPosition!, 12.5);
+                    });
+                  }
+                },
+              )
+            : null,
         body: Container(
           child: Center(
             child: Padding(
