@@ -211,35 +211,33 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Expanded(
-              child: InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  onTap: () {
-                    if (!_isTracking) {
-                      _selectBusStop(context);
-                    }
-                  },
-                  child: Padding(
-                      padding: EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            selectedBusStop != null
-                                ? selectedBusStop?.name ??
-                                    "Przystanek bez nazwy"
-                                : "Wybierz przystanek",
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            softWrap: false,
-                          )),
-                          Icon(
-                            Icons.expand_more,
-                          )
-                        ],
-                      )))),
+          title: InkWell(
+              customBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              onTap: () {
+                if (!_isTracking) {
+                  _selectBusStop(context);
+                }
+              },
+              child: Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Text(
+                        selectedBusStop != null
+                            ? selectedBusStop?.name ?? "Przystanek bez nazwy"
+                            : "Wybierz przystanek",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: false,
+                      )),
+                      Icon(
+                        Icons.expand_more,
+                      )
+                    ],
+                  ))),
           actions: [
             TextButton(
               child: Text(_isTracking ? "PRZERWIJ" : "ROZPOCZNIJ",

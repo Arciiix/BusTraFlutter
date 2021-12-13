@@ -67,7 +67,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
     if (editedBusStop != null) {
       final transaction = Transactions.getBusStop();
       transaction.put(stop.key, editedBusStop);
-      showSnackBar(context, "Dodano nowy przystanek!");
+      showSnackBar(context, "Zmodyfikowano przystanek!");
     }
   }
 

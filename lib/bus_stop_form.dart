@@ -137,20 +137,18 @@ class _BusStopFormState extends State<BusStopForm> {
   void handleSave(BuildContext context) {
     //TODO: Replace comma (,) with a dot (.) in the coordinates inputs
     if (validateWholeForm()) {
-      if (!isEditing) {
-        final busStopObj = BusStop()
-          ..name = _nameController.text
-          ..destinationBusStopLatitude =
-              double.parse(_destinationBusStopLatitudeController.text)
-          ..destinationBusStopLongitude =
-              double.parse(_destinationBusStopLongitudeController.text)
-          ..previousBusStopLatitude =
-              double.parse(_previousBusStopLatitudeController.text)
-          ..previousBusStopLongitude =
-              double.parse(_previousBusStopLongitudeController.text);
+      final busStopObj = BusStop()
+        ..name = _nameController.text
+        ..destinationBusStopLatitude =
+            double.parse(_destinationBusStopLatitudeController.text)
+        ..destinationBusStopLongitude =
+            double.parse(_destinationBusStopLongitudeController.text)
+        ..previousBusStopLatitude =
+            double.parse(_previousBusStopLatitudeController.text)
+        ..previousBusStopLongitude =
+            double.parse(_previousBusStopLongitudeController.text);
 
-        Navigator.pop(context, busStopObj);
-      }
+      Navigator.pop(context, busStopObj);
     }
   }
 
