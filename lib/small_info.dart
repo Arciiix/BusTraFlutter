@@ -13,7 +13,7 @@ class SmallInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Icon(icon, size: 30),
-        Text(value, style: TextStyle(fontSize: 24))
+        Text(value, style: const TextStyle(fontSize: 24))
       ],
     );
   }

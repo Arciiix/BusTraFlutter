@@ -1,21 +1,16 @@
-import 'dart:async';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:background_location/background_location.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/select_bus_stop.dart';
 import 'package:bustra/small_info.dart';
 import 'package:bustra/tracking.dart';
-import 'package:bustra/utils/generate_unique_id.dart';
 import 'package:bustra/utils/get_permissions.dart';
 import 'package:bustra/utils/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
-//import 'package:flutter_geofence/Geolocation.dart';
-//import 'package:flutter_geofence/geofence.dart';
+import 'dart:async';
+import 'package:battery_plus/battery_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,6 +19,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? osVersion;
+  final Battery _battery = Battery();
+  int? initialBatteryLevel;
+  int? currentBatteryLevel;
 
   BusStop? selectedBusStop;
 
@@ -40,9 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    //Geofence.initialize();
-    //Geofence.requestPermissions();
 
     _showNotificationWarn();
 
@@ -69,12 +64,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (osVersion! >= 30) {
       if (!(await isLocationInBackgroundGranted())) {
         AlertDialog notificationDialogAndroid11 = AlertDialog(
-          title: Text("Uprawnienia"),
-          content: Text(
+          title: const Text("Uprawnienia"),
+          content: const Text(
               'Android 11 nie umożliwia zezwolenia na lokalizację w tle z poziomu aplikacji. Wejdź w ustawienia swojego urządzenia i przy lokalizacji zaznacz "Zawsze"'),
           actions: [
             TextButton(
-                child: Text("OK"),
+                child: const Text("OK"),
                 onPressed: () {
                   Navigator.of(context).pop();
                 })
@@ -109,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _startTracking() {
+  void _startTracking() async {
     if (selectedBusStop == null) {
       showSnackBar(context, "Wybierz swój przystanek");
       return;
@@ -124,6 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
 
+    initialBatteryLevel = await _battery.batteryLevel;
+    currentBatteryLevel = initialBatteryLevel;
+
     Tracking.startTracking(
         LatLng(selectedBusStop!.destinationBusStopLatitude,
             selectedBusStop!.destinationBusStopLongitude),
@@ -131,10 +129,11 @@ class _HomeScreenState extends State<HomeScreen> {
             selectedBusStop!.previousBusStopLongitude),
         (currPos, distanceToDestination) {
       print("CALLBACK");
-      setState(() {
+      setState(() async {
         _currPosition = currPos;
         _distanceToDestination = distanceToDestination;
         _isTracking = true;
+        currentBatteryLevel = await _battery.batteryLevel;
       });
     });
   }
@@ -183,14 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             selectedBusStop!.destinationBusStopLatitude,
                             selectedBusStop!.destinationBusStopLongitude),
                         builder: (ctx) =>
-                            Container(child: Icon(Icons.directions_bus))),
+                            Container(child: const Icon(Icons.directions_bus))),
                     Marker(
                         width: 100,
                         height: 100,
                         point: LatLng(selectedBusStop!.previousBusStopLatitude,
                             selectedBusStop!.previousBusStopLongitude),
                         builder: (ctx) =>
-                            Container(child: Icon(Icons.bus_alert))),
+                            Container(child: const Icon(Icons.bus_alert))),
                     Marker(
                         //marker
                         width: 100,
@@ -238,15 +237,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget buildInfo() {
     return Container(
-        padding: EdgeInsets.only(top: 10),
+        padding: const EdgeInsets.only(top: 10),
         child: Column(children: [
           Text(
               "${_distanceToDestination != null ? _distanceToDestination.toString() : "0"} m",
-              style: TextStyle(fontSize: 48)),
+              style: const TextStyle(fontSize: 48)),
           Row(
             children: [
               Expanded(
                   child: SmallInfo(icon: Icons.timelapse, value: _parsedTime)),
+              const VerticalDivider(),
+              Expanded(
+                  child: SmallInfo(
+                      icon: Icons.battery_full,
+                      value: (currentBatteryLevel != null
+                                  ? initialBatteryLevel! - currentBatteryLevel!
+                                  : 0)
+                              .toString() +
+                          "%")),
             ],
           )
         ]));
@@ -266,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
               },
               child: Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Row(
                     children: [
                       Expanded(
@@ -278,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         maxLines: 1,
                         softWrap: false,
                       )),
-                      Icon(
+                      const Icon(
                         Icons.expand_more,
                       )
                     ],
@@ -286,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             TextButton(
               child: Text(_isTracking ? "PRZERWIJ" : "ROZPOCZNIJ",
-                  style: TextStyle(color: Colors.white)),
+                  style: const TextStyle(color: Colors.white)),
               onPressed: () => _isTracking ? _stopTracking() : _startTracking(),
             )
           ],
@@ -306,7 +314,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Container(
           child: Center(
             child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -316,8 +324,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: Container(
-                        padding: EdgeInsets.only(left: 10, bottom: 10),
-                        child: Banner(
+                        padding: const EdgeInsets.only(left: 10, bottom: 10),
+                        child: const Banner(
                           message: "DEV 1.1-131221",
                           location: BannerLocation.bottomStart,
                         ),

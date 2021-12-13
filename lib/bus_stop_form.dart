@@ -1,5 +1,4 @@
 import 'package:bustra/models/bus_stop.dart';
-import 'package:bustra/transactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
@@ -179,7 +178,7 @@ class _BusStopFormState extends State<BusStopForm> {
                   padding: const EdgeInsets.all(5),
                   child: TextFormField(
                       controller: _nameController,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: "Nazwa",
                       ),
                       validator: (val) {
@@ -267,7 +266,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                 },
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: const [
                                       Icon(Icons.paste),
                                       Text("Wklej koordynaty")
                                     ])))
@@ -350,7 +349,7 @@ class _BusStopFormState extends State<BusStopForm> {
                                 },
                                 child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
+                                    children: const [
                                       Icon(Icons.paste),
                                       Text("Wklej koordynaty")
                                     ])))

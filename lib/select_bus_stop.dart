@@ -17,8 +17,8 @@ class _SelectBusStopState extends State<SelectBusStop> {
   Future<void> _createBusStop() async {
     BusStop? busStop = await Navigator.push(
         context,
-        new MaterialPageRoute(
-            builder: (BuildContext context) => new BusStopForm(),
+        MaterialPageRoute(
+            builder: (BuildContext context) => BusStopForm(),
             fullscreenDialog: true));
 
     if (busStop != null) {
@@ -34,12 +34,12 @@ class _SelectBusStopState extends State<SelectBusStop> {
       content: Text("Czy na pewno chcesz usunąć ${stop.name}?"),
       actions: [
         TextButton(
-            child: Text("Anuluj"),
+            child: const Text("Anuluj"),
             onPressed: () {
               Navigator.of(context).pop(false);
             }),
         TextButton(
-            child: Text("Usuń"),
+            child: const Text("Usuń"),
             onPressed: () {
               Navigator.of(context).pop(true);
             })
@@ -60,7 +60,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
   Future<void> _editBusStop(BusStop stop) async {
     BusStop? editedBusStop = await Navigator.push(
         context,
-        new MaterialPageRoute(
+        MaterialPageRoute(
             builder: (BuildContext context) => BusStopForm(baseBusStop: stop),
             fullscreenDialog: true));
 
@@ -91,7 +91,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
 
   Widget buildList(List<BusStop> busStops) {
     if (busStops.isEmpty) {
-      return Center(
+      return const Center(
           child: Text(
         'Brak przystanków!',
         style: TextStyle(fontSize: 24),
@@ -100,7 +100,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
       return Column(children: [
         Expanded(
             child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 60),
+                padding: const EdgeInsets.only(bottom: 60),
                 itemCount: busStops.length,
                 itemBuilder: (BuildContext context, int index) {
                   final busStop = busStops[index];
@@ -113,7 +113,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
   Widget buildBusStop(BuildContext context, BusStop busStop) {
     //TODO: Make the card display the name, destination bus stop, previous bus stop and the edit and delete button (and make them work)
     return Padding(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: InkWell(
             onTap: () => Navigator.pop(context, busStop),
             child: Row(
@@ -124,7 +124,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
                     flex: 9,
                     child: Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                             flex: 4,
                             child: Padding(
                                 padding: EdgeInsets.all(2),
@@ -144,7 +144,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                 Text(
                                   busStop.name ?? "",
                                   textAlign: TextAlign.start,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 24,
                                   ),
                                 ),
@@ -152,14 +152,14 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Row(children: [
-                                        Icon(Icons.label_outlined),
+                                        const Icon(Icons.label_outlined),
                                         Text(
                                           "${busStop.destinationBusStopLatitude}\n${busStop.destinationBusStopLongitude}",
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ]),
                                       Row(children: [
-                                        Icon(Icons.flag_outlined),
+                                        const Icon(Icons.flag_outlined),
                                         Text(
                                           "${busStop.previousBusStopLatitude}\n${busStop.previousBusStopLongitude}",
                                           overflow: TextOverflow.ellipsis,

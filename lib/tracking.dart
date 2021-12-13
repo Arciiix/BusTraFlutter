@@ -1,8 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:bustra/notification.dart';
 import 'package:bustra/utils/generate_unique_id.dart';
-import 'package:flutter/material.dart';
-import "dart:async";
 import 'package:background_location/background_location.dart';
 
 import 'package:latlong2/latlong.dart';
