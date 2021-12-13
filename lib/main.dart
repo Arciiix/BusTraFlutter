@@ -33,13 +33,6 @@ Future<void> main() async {
       ],
       debug: true);
 
-  //Handle notifications tap
-  AwesomeNotifications()
-      .actionStream
-      .listen((ReceivedNotification receivedNotification) {
-    print("GOT NOTIFICATION; ID: ${receivedNotification.id}");
-  });
-
   runApp(const MyApp());
 }
 

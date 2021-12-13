@@ -154,14 +154,14 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                       Row(children: [
                                         Icon(Icons.label_outlined),
                                         Text(
-                                          "${busStop.destinationBusStopLatitude}, ${busStop.destinationBusStopLongitude}",
+                                          "${busStop.destinationBusStopLatitude}\n${busStop.destinationBusStopLongitude}",
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ]),
                                       Row(children: [
                                         Icon(Icons.flag_outlined),
                                         Text(
-                                          "${busStop.previousBusStopLatitude}, ${busStop.previousBusStopLongitude}",
+                                          "${busStop.previousBusStopLatitude}\n${busStop.previousBusStopLongitude}",
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       ])

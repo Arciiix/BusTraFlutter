@@ -45,6 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
     //Geofence.requestPermissions();
 
     _showNotificationWarn();
+
+    AwesomeNotifications().actionStream.listen((event) {
+      if (event.buttonKeyPressed == 'STOP_TRACKING' && _isTracking) {
+        _stopTracking();
+      }
+    });
   }
 
   void _showNotificationWarn() async {
@@ -304,7 +310,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         padding: EdgeInsets.only(left: 10, bottom: 10),
                         child: Banner(
-                          message: "DEV 1.0-121221",
+                          message: "DEV 1.1-131221",
                           location: BannerLocation.bottomStart,
                         ),
                       ),
