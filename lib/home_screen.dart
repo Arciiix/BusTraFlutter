@@ -1,6 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/select_bus_stop.dart';
+import 'package:bustra/settings.dart';
 import 'package:bustra/small_info.dart';
 import 'package:bustra/tracking.dart';
 import 'package:bustra/utils/get_permissions.dart';
@@ -311,6 +312,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               )
             : null,
+        drawer: Drawer(
+          child: ListView(
+            reverse: true,
+            children: [
+              Text("Made with ❤️ by Arciiix",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[500])),
+              //DEV: TODO: Get it from the build info
+              Text("DEV 1.0.0/161221",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.grey[500])),
+              ListTile(
+                  title: Text("Ustawienia"),
+                  leading: Icon(Icons.settings),
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => new Settings(),
+                          fullscreenDialog: true)))
+            ],
+          ),
+        ),
         body: Container(
           child: Center(
             child: Padding(
@@ -320,17 +343,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Expanded(flex: 18, child: buildMap()),
                     Expanded(flex: 5, child: buildInfo()),
-                    //DEV - VERSION
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 10, bottom: 10),
-                        child: const Banner(
-                          message: "DEV 1.1-131221",
-                          location: BannerLocation.bottomStart,
-                        ),
-                      ),
-                    ),
                   ],
                 )),
           ),

@@ -1,8 +1,9 @@
+import 'package:bustra/manage_tags.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
-
+import 'models/tag.dart';
 import "package:bustra/utils/show_snackbar.dart";
 
 class BusStopForm extends StatefulWidget {
@@ -28,6 +29,7 @@ class _BusStopFormState extends State<BusStopForm> {
       TextEditingController();
   final TextEditingController _previousBusStopLongitudeController =
       TextEditingController();
+  List<Tag> _tags = [];
 
   @override
   void initState() {
@@ -153,6 +155,20 @@ class _BusStopFormState extends State<BusStopForm> {
 
   bool validateWholeForm() {
     return _formKey.currentState!.validate();
+  }
+
+  void _addTag() async {
+    Tag? tag = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => ManageTags(),
+            fullscreenDialog: true));
+
+    if (tag != null) {
+      setState(() {
+        _tags.add(tag);
+      });
+    }
   }
 
   @override
@@ -355,7 +371,37 @@ class _BusStopFormState extends State<BusStopForm> {
                                     ])))
                       ],
                     )),
-                //TODO: Add support for tags (see the selectBusStop screen)
+                Column(
+                  children: [
+                    const Text(
+                      "Tagi",
+                      style: TextStyle(fontSize: 32),
+                      textAlign: TextAlign.left,
+                    ),
+                    Wrap(
+                        direction: Axis.vertical,
+                        children: List<Widget>.generate(
+                          _tags.length,
+                          (int id) {
+                            Tag tag = _tags[id];
+                            return Chip(
+                                label: Text(tag.label),
+                                deleteIcon: Icon(Icons.close),
+                                onDeleted: () => setState(() {
+                                      _tags.remove(tag);
+                                    }),
+                                backgroundColor:
+                                    Color(tag.color).withOpacity(1),
+                                avatar: tag.icon);
+                          },
+                        )),
+                    TextButton.icon(
+                      icon: const Icon(Icons.add),
+                      label: const Text("Dodaj tag"),
+                      onPressed: () => _addTag(),
+                    )
+                  ],
+                )
               ])),
             )));
   }

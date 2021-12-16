@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:bustra/models/bus_stop.dart';
+import 'models/tag.dart';
 
 import 'package:bustra/home_screen.dart';
 import 'package:bustra/error.dart';
@@ -16,7 +17,9 @@ Future<void> main() async {
   //Database
   await Hive.initFlutter();
   Hive.registerAdapter(BusStopAdapter());
+  Hive.registerAdapter(TagAdapter());
   await Hive.openBox<BusStop>("busStops");
+  await Hive.openBox<Tag>("tags");
 
   //Notifications
   AwesomeNotifications().initialize(
