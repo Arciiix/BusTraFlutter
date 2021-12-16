@@ -75,6 +75,7 @@ class _TagFormState extends State<TagForm> {
                   validator: validateLabel,
                   decoration: const InputDecoration(hintText: "Nazwa"),
                 )
+                //TODO: Create an input for color and icon
               ],
             )));
   }
