@@ -1,5 +1,7 @@
 import 'package:bustra/manage_tags.dart';
 import 'package:bustra/models/bus_stop.dart';
+import 'package:bustra/transactions.dart';
+import 'package:bustra/utils/get_bus_stop_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
@@ -45,6 +47,8 @@ class _BusStopFormState extends State<BusStopForm> {
           widget.baseBusStop!.previousBusStopLatitude.toString();
       _previousBusStopLongitudeController.text =
           widget.baseBusStop!.previousBusStopLongitude.toString();
+
+      _tags = getBusStopTags(widget.baseBusStop!);
     } else {
       isEditing = false;
     }
@@ -149,7 +153,8 @@ class _BusStopFormState extends State<BusStopForm> {
         ..previousBusStopLongitude =
             double.parse(_previousBusStopLongitudeController.text);
 
-      Navigator.pop(context, busStopObj);
+      final BusStopUnsaved returnBusStopVal = BusStopUnsaved(busStopObj, _tags);
+      Navigator.pop(context, returnBusStopVal);
     }
   }
 
@@ -406,4 +411,11 @@ class _BusStopFormState extends State<BusStopForm> {
               ])),
             )));
   }
+}
+
+class BusStopUnsaved {
+  BusStop busStopObj;
+  List<Tag> tags;
+
+  BusStopUnsaved(this.busStopObj, this.tags);
 }

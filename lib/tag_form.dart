@@ -1,4 +1,6 @@
+import 'package:bustra/transactions.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'models/tag.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -46,7 +48,7 @@ class _TagFormState extends State<TagForm> {
       Tag tag = Tag()
         ..label = _labelController.text
         ..color = color.value
-        ..assignedTo = null;
+        ..assignedTo = HiveList(Transactions.getBusStop());
 
       Navigator.pop(context, tag);
     }

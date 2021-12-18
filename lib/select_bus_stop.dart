@@ -1,5 +1,6 @@
 import 'package:bustra/bus_stop_form.dart';
 import 'package:bustra/transactions.dart';
+import 'package:bustra/utils/get_bus_stop_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -8,6 +9,8 @@ import 'models/bus_stop.dart';
 
 import "package:bustra/utils/show_snackbar.dart";
 
+import 'models/tag.dart';
+
 class SelectBusStop extends StatefulWidget {
   @override
   State<SelectBusStop> createState() => _SelectBusStopState();
@@ -15,7 +18,7 @@ class SelectBusStop extends StatefulWidget {
 
 class _SelectBusStopState extends State<SelectBusStop> {
   Future<void> _createBusStop() async {
-    BusStop? busStop = await Navigator.push(
+    BusStopUnsaved? busStop = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => BusStopForm(),
@@ -23,7 +26,25 @@ class _SelectBusStopState extends State<SelectBusStop> {
 
     if (busStop != null) {
       final transaction = Transactions.getBusStop();
-      transaction.add(busStop);
+      int key = await transaction.add(busStop.busStopObj);
+
+      final BusStop? addedObj = transaction.get(key);
+
+      if (addedObj != null) {
+        final tagsTransaction = await Transactions.getTag();
+        final tags = tagsTransaction.values.toList();
+        tags.forEach((element) {
+          if (busStop.tags.contains(element) &&
+              !element.assignedTo.contains(addedObj)) {
+            element.assignedTo.add(addedObj);
+          }
+          if (!busStop.tags.contains(element) &&
+              element.assignedTo.contains(addedObj)) {
+            element.assignedTo.remove(addedObj);
+          }
+        });
+      }
+
       showSnackBar(context, "Dodano nowy przystanek!");
     }
   }
@@ -58,7 +79,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
   }
 
   Future<void> _editBusStop(BusStop stop) async {
-    BusStop? editedBusStop = await Navigator.push(
+    BusStopUnsaved? editedBusStop = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (BuildContext context) => BusStopForm(baseBusStop: stop),
@@ -66,7 +87,22 @@ class _SelectBusStopState extends State<SelectBusStop> {
 
     if (editedBusStop != null) {
       final transaction = Transactions.getBusStop();
-      transaction.put(stop.key, editedBusStop);
+      transaction.put(stop.key, editedBusStop.busStopObj);
+
+      if (editedBusStop.busStopObj != null) {
+        final tagsTransaction = await Transactions.getTag();
+        final tags = tagsTransaction.values.toList();
+        tags.forEach((element) {
+          if (editedBusStop.tags.contains(element) &&
+              !element.assignedTo.contains(editedBusStop.busStopObj)) {
+            element.assignedTo.add(editedBusStop.busStopObj);
+          }
+          if (!editedBusStop.tags.contains(element) &&
+              element.assignedTo.contains(editedBusStop.busStopObj)) {
+            element.assignedTo.remove(editedBusStop.busStopObj);
+          }
+        });
+      }
       showSnackBar(context, "Zmodyfikowano przystanek!");
     }
   }
@@ -111,6 +147,8 @@ class _SelectBusStopState extends State<SelectBusStop> {
   }
 
   Widget buildBusStop(BuildContext context, BusStop busStop) {
+    final List<Tag> tags = getBusStopTags(busStop);
+
     return Padding(
         padding: const EdgeInsets.all(10),
         child: InkWell(
@@ -123,17 +161,6 @@ class _SelectBusStopState extends State<SelectBusStop> {
                     flex: 9,
                     child: Row(
                       children: [
-                        const Expanded(
-                            flex: 4,
-                            child: Padding(
-                                padding: EdgeInsets.all(2),
-                                child: Chip(
-                                  label: Text(
-                                    //Think what to do if text overflows
-                                    "LABEL",
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ))),
                         Expanded(
                             flex: 7,
                             child: Column(
@@ -164,7 +191,25 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                           overflow: TextOverflow.ellipsis,
                                         )
                                       ])
-                                    ])
+                                    ]),
+                                Wrap(
+                                    clipBehavior: Clip.antiAlias,
+                                    direction: Axis.vertical,
+                                    crossAxisAlignment:
+                                        WrapCrossAlignment.start,
+                                    children: List<Widget>.generate(
+                                      tags.length,
+                                      (int id) {
+                                        Tag tag = tags[id];
+                                        return Chip(
+                                          label: Text(tag.label,
+                                              overflow: TextOverflow.ellipsis),
+                                          backgroundColor:
+                                              Color(tag.color).withOpacity(1),
+                                        );
+                                        ;
+                                      },
+                                    ))
                               ],
                             )),
                       ],

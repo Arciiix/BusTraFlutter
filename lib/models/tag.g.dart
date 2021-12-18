@@ -17,7 +17,7 @@ class TagAdapter extends TypeAdapter<Tag> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Tag()
-      ..assignedTo = (fields[0] as HiveList?)?.castHiveList()
+      ..assignedTo = (fields[0] as HiveList).castHiveList()
       ..label = fields[1] as String
       ..color = fields[2] as int;
   }
