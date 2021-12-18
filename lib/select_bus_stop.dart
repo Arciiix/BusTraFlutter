@@ -42,6 +42,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
               element.assignedTo.contains(addedObj)) {
             element.assignedTo.remove(addedObj);
           }
+          element.save();
         });
       }
 
@@ -90,7 +91,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
       transaction.put(stop.key, editedBusStop.busStopObj);
 
       if (editedBusStop.busStopObj != null) {
-        final tagsTransaction = await Transactions.getTag();
+        final tagsTransaction = Transactions.getTag();
         final tags = tagsTransaction.values.toList();
         tags.forEach((element) {
           if (editedBusStop.tags.contains(element) &&
@@ -101,6 +102,7 @@ class _SelectBusStopState extends State<SelectBusStop> {
               element.assignedTo.contains(editedBusStop.busStopObj)) {
             element.assignedTo.remove(editedBusStop.busStopObj);
           }
+          element.save();
         });
       }
       showSnackBar(context, "Zmodyfikowano przystanek!");
