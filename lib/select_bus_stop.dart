@@ -111,7 +111,6 @@ class _SelectBusStopState extends State<SelectBusStop> {
   }
 
   Widget buildBusStop(BuildContext context, BusStop busStop) {
-    //TODO: Make the card display the name, destination bus stop, previous bus stop and the edit and delete button (and make them work)
     return Padding(
         padding: const EdgeInsets.all(10),
         child: InkWell(

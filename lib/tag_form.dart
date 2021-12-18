@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'models/tag.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class TagForm extends StatefulWidget {
   @override
@@ -18,8 +19,7 @@ class _TagFormState extends State<TagForm> {
 
   TextEditingController _labelController = TextEditingController();
   Color color = Colors.blue;
-  //TODO: Change the type to something primitive - Hive doesn't support Icons
-  Icon? icon;
+  Color pickerColor = Colors.blue;
 
   @override
   void initState() {
@@ -29,7 +29,6 @@ class _TagFormState extends State<TagForm> {
         _labelController.text = widget.baseTag?.label ?? "";
         color =
             Color(widget.baseTag?.color ?? Colors.blue.value).withOpacity(1);
-        icon = widget.baseTag?.icon;
       });
     }
   }
@@ -47,11 +46,39 @@ class _TagFormState extends State<TagForm> {
       Tag tag = Tag()
         ..label = _labelController.text
         ..color = color.value
-        ..icon = icon
         ..assignedTo = null;
 
       Navigator.pop(context, tag);
     }
+  }
+
+  void _changeColor() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Wybierz kolor'),
+            content: SingleChildScrollView(
+              child: MaterialPicker(
+                pickerColor: pickerColor,
+                onColorChanged: _changePickerColor,
+              ),
+            ),
+            actions: <Widget>[
+              ElevatedButton(
+                child: const Text('Zatwierdź'),
+                onPressed: () {
+                  setState(() => color = pickerColor);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void _changePickerColor(Color c) {
+    setState(() => pickerColor = c);
   }
 
   @override
@@ -68,15 +95,41 @@ class _TagFormState extends State<TagForm> {
         ),
         body: Form(
             key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _labelController,
-                  validator: validateLabel,
-                  decoration: const InputDecoration(hintText: "Nazwa"),
-                )
-                //TODO: Create an input for color and icon
-              ],
-            )));
+            child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                        padding: EdgeInsets.all(10),
+                        child: TextFormField(
+                          controller: _labelController,
+                          validator: validateLabel,
+                          decoration: const InputDecoration(hintText: "Nazwa"),
+                        )),
+                    SizedBox(height: 20),
+                    InkWell(
+                        onTap: _changeColor,
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Kolor", style: TextStyle(fontSize: 24)),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  color: color,
+                                ),
+                              )
+                            ],
+                          ),
+                        )),
+                    SizedBox(height: 20),
+                  ],
+                ))));
   }
 }

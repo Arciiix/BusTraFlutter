@@ -14,7 +14,4 @@ class Tag extends HiveObject {
   @HiveField(2)
   //Color.value
   late int color;
-
-  @HiveField(3)
-  late Icon? icon;
 }

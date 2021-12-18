@@ -380,19 +380,20 @@ class _BusStopFormState extends State<BusStopForm> {
                     ),
                     Wrap(
                         direction: Axis.vertical,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: List<Widget>.generate(
                           _tags.length,
                           (int id) {
                             Tag tag = _tags[id];
                             return Chip(
-                                label: Text(tag.label),
-                                deleteIcon: Icon(Icons.close),
-                                onDeleted: () => setState(() {
-                                      _tags.remove(tag);
-                                    }),
-                                backgroundColor:
-                                    Color(tag.color).withOpacity(1),
-                                avatar: tag.icon);
+                              label: Text(tag.label),
+                              deleteIcon: Icon(Icons.close),
+                              onDeleted: () => setState(() {
+                                _tags.remove(tag);
+                              }),
+                              backgroundColor: Color(tag.color).withOpacity(1),
+                            );
+                            ;
                           },
                         )),
                     TextButton.icon(

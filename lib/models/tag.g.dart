@@ -19,22 +19,19 @@ class TagAdapter extends TypeAdapter<Tag> {
     return Tag()
       ..assignedTo = (fields[0] as HiveList?)?.castHiveList()
       ..label = fields[1] as String
-      ..color = fields[2] as int
-      ..icon = fields[3] as Icon?;
+      ..color = fields[2] as int;
   }
 
   @override
   void write(BinaryWriter writer, Tag obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.assignedTo)
       ..writeByte(1)
       ..write(obj.label)
       ..writeByte(2)
-      ..write(obj.color)
-      ..writeByte(3)
-      ..write(obj.icon);
+      ..write(obj.color);
   }
 
   @override

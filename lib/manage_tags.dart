@@ -74,7 +74,6 @@ class _ManageTagsState extends State<ManageTags> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (tag.icon != null) Expanded(flex: 3, child: tag.icon!),
                     Expanded(flex: 11, child: Text(tag.label)),
                     Expanded(
                         flex: 4,
