@@ -207,6 +207,7 @@ class _BusStopFormState extends State<BusStopForm> {
                             ? "Nazwa nie może być pusta"
                             : null;
                       }),
+                  //TODO: Add a character limit
                 ),
                 Padding(
                     padding: const EdgeInsets.all(10),
