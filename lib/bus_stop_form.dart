@@ -158,15 +158,15 @@ class _BusStopFormState extends State<BusStopForm> {
   }
 
   void _addTag() async {
-    Tag? tag = await Navigator.push(
+    List<Tag>? tags = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => ManageTags(),
+            builder: (BuildContext context) => ManageTags(checkedTags: _tags),
             fullscreenDialog: true));
 
-    if (tag != null) {
+    if (tags != null) {
       setState(() {
-        _tags.add(tag);
+        _tags = tags;
       });
     }
   }

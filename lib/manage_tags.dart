@@ -7,13 +7,20 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'models/tag.dart';
 
 class ManageTags extends StatefulWidget {
-  const ManageTags({Key? key}) : super(key: key);
+  final List<Tag>? checkedTags;
+
+  const ManageTags({
+    Key? key,
+    this.checkedTags,
+  }) : super(key: key);
 
   @override
   _ManageTagsState createState() => _ManageTagsState();
 }
 
 class _ManageTagsState extends State<ManageTags> {
+  List<Tag> _checkedTags = [];
+
   void _addNewTag() async {
     Tag? newTag = await Navigator.push(
         context,
@@ -28,9 +35,26 @@ class _ManageTagsState extends State<ManageTags> {
   }
 
   @override
+  void initState() {
+    if (widget.checkedTags != null) {
+      setState(() {
+        _checkedTags = widget.checkedTags!;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Wybierz tag")),
+        appBar: AppBar(
+          title: const Text("Wybierz tag"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.check),
+              onPressed: () => Navigator.pop(context, _checkedTags),
+            )
+          ],
+        ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
           onPressed: () => _addNewTag(),
@@ -67,14 +91,22 @@ class _ManageTagsState extends State<ManageTags> {
     return Padding(
         padding: EdgeInsets.all(10),
         child: InkWell(
-            onTap: () => Navigator.pop(context, tag),
+            onTap: () => _changeChecked(!_checkedTags.contains(tag), tag),
             child: Padding(
                 padding: EdgeInsets.all(5),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(flex: 11, child: Text(tag.label)),
+                    Expanded(
+                        flex: 1,
+                        child: Checkbox(
+                          value: _checkedTags.contains(tag),
+                          onChanged: (checked) {
+                            _changeChecked(checked, tag);
+                          },
+                        )),
+                    Expanded(flex: 10, child: Text(tag.label)),
                     Expanded(
                         flex: 4,
                         child: Row(
@@ -89,5 +121,20 @@ class _ManageTagsState extends State<ManageTags> {
                         ))
                   ],
                 ))));
+  }
+
+  void _changeChecked(bool? checked, Tag tag) {
+    checked ??= false;
+
+    if (checked && !_checkedTags.contains(tag)) {
+      setState(() {
+        _checkedTags.add(tag);
+      });
+    }
+    if (!checked && _checkedTags.contains(tag)) {
+      setState(() {
+        _checkedTags.remove(tag);
+      });
+    }
   }
 }
