@@ -68,6 +68,7 @@ class _TagFormState extends State<TagForm> {
               ElevatedButton(
                 child: const Text('Zatwierdź'),
                 onPressed: () {
+                  //TODO: If the color is more dark, change the text color to white and vice versa
                   setState(() => color = pickerColor);
                   Navigator.of(context).pop();
                 },
