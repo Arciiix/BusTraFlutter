@@ -34,6 +34,8 @@ class _BusStopFormState extends State<BusStopForm> {
       TextEditingController();
   List<Tag> _tags = [];
 
+  int _stepperStep = 0;
+
   @override
   void initState() {
     super.initState();
@@ -197,6 +199,20 @@ class _BusStopFormState extends State<BusStopForm> {
               child: SingleChildScrollView(
                   child: Column(children: [
                 Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(children: const [
+                      Text(
+                        "lub",
+                        style: TextStyle(fontSize: 32),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        "dodaj ręcznie",
+                        style: TextStyle(fontSize: 32),
+                        textAlign: TextAlign.left,
+                      ),
+                    ])),
+                Padding(
                   padding: const EdgeInsets.all(5),
                   child: TextFormField(
                       controller: _nameController,
@@ -216,7 +232,7 @@ class _BusStopFormState extends State<BusStopForm> {
                       children: [
                         const Text(
                           "Przystanek docelowy",
-                          style: TextStyle(fontSize: 32),
+                          style: TextStyle(fontSize: 24),
                           textAlign: TextAlign.left,
                         ),
                         TextFormField(
@@ -297,12 +313,10 @@ class _BusStopFormState extends State<BusStopForm> {
                             padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
                                 onPressed: () async {
-                                  LatLng? selectedLocation =
-                                      await Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (BuildContext context) =>
-                                               MapPicker(
+                                  LatLng? selectedLocation = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) => MapPicker(
                                               initialLocation: double.tryParse(
                                                               _destinationBusStopLatitudeController
                                                                   .text) !=
@@ -313,8 +327,8 @@ class _BusStopFormState extends State<BusStopForm> {
                                                       double.parse(
                                                           _destinationBusStopLatitudeController.text),
                                                       double.parse(_destinationBusStopLongitudeController.text))
-                                                  : null)
-                                              fullscreenDialog: true));
+                                                  : null),
+                                          fullscreenDialog: true));
 
                                   if (selectedLocation != null) {
                                     setState(() {
@@ -341,7 +355,7 @@ class _BusStopFormState extends State<BusStopForm> {
                       children: [
                         const Text(
                           "Przystanek poprzedzający",
-                          style: TextStyle(fontSize: 32),
+                          style: TextStyle(fontSize: 24),
                           textAlign: TextAlign.left,
                         ),
                         TextFormField(
