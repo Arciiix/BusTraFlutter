@@ -12,6 +12,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:async';
 import 'package:battery_plus/battery_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int? osVersion;
+  String? appVersion;
   final Battery _battery = Battery();
   int? initialBatteryLevel;
   int? currentBatteryLevel;
@@ -76,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 })
           ],
         );
-
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -86,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
         //TODO: Maybe throw an error?
       }
     }
+        PackageInfo packageInfo = await PackageInfo.fromPlatform();
+        setState(() {
+        appVersion = packageInfo.version + "/" + packageInfo.buildNumber;  
+        });
   }
 
   void _selectBusStop(BuildContext context) async {
@@ -320,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[500])),
               //DEV: TODO: Get it from the build info
-              Text("DEV 1.0.0/161221",
+              Text(appVersion ?? "Unknown",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[500])),
               ListTile(
