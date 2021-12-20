@@ -107,7 +107,7 @@ class _TagFormState extends State<TagForm> {
                         padding: EdgeInsets.all(10),
                         child: TextFormField(
                           controller: _labelController,
-                          //TODO: Add a character limit
+                          maxLength: 32,
                           validator: validateLabel,
                           decoration: const InputDecoration(hintText: "Nazwa"),
                         )),

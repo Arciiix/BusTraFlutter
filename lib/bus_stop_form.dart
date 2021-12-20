@@ -202,12 +202,13 @@ class _BusStopFormState extends State<BusStopForm> {
                       decoration: const InputDecoration(
                         labelText: "Nazwa",
                       ),
+                      maxLength: 255,
                       validator: (val) {
                         return val == null || val.isEmpty
                             ? "Nazwa nie może być pusta"
                             : null;
                       }),
-                  //TODO: Add a character limit
+                  
                 ),
                 Padding(
                     padding: const EdgeInsets.all(10),

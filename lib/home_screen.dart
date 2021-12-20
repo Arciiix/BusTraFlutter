@@ -324,7 +324,6 @@ class _HomeScreenState extends State<HomeScreen> {
               Text("Made with ❤️ by Arciiix",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[500])),
-              //DEV: TODO: Get it from the build info
               Text(appVersion ?? "Unknown",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[500])),
