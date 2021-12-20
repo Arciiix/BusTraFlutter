@@ -393,8 +393,8 @@ class _BusStopFormState extends State<BusStopForm> {
                           (int id) {
                             Tag tag = _tags[id];
                             return Chip(
-                              label: Text(tag.label),
-                              deleteIcon: Icon(Icons.close),
+                              label: Text(tag.label, style: TextStyle(color:Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white)),
+                              deleteIcon: Icon(Icons.close, color: Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white),
                               onDeleted: () => setState(() {
                                 _tags.remove(tag);
                               }),

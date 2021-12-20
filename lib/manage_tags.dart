@@ -152,7 +152,18 @@ class _ManageTagsState extends State<ManageTags> {
                             _changeChecked(checked, tag);
                           },
                         )),
-                    Expanded(flex: 10, child: Text(tag.label)),
+                    Expanded(flex: 10, child: Row(
+                      
+                      children: [Text(tag.label),  Container(
+                                width: 20,
+                                height: 20,
+                                margin: EdgeInsets.only(left: 5),
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  color: Color(tag.color),
+                                ),
+                              )])),
                     Expanded(
                         flex: 4,
                         child: Row(

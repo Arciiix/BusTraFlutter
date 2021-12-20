@@ -205,7 +205,8 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                         Tag tag = tags[id];
                                         return Chip(
                                           label: Text(tag.label,
-                                              overflow: TextOverflow.ellipsis),
+                                              overflow: TextOverflow.ellipsis, 
+                                              style: TextStyle(color:Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white)),
                                           backgroundColor:
                                               Color(tag.color).withOpacity(1),
                                         );
