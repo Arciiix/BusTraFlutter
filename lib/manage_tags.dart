@@ -34,6 +34,52 @@ class _ManageTagsState extends State<ManageTags> {
     }
   }
 
+  void _editTag(Tag tag) async
+  {
+          _checkedTags.remove(tag);
+      
+        Tag? editedTag = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => TagForm(baseTag: tag),
+            fullscreenDialog: true));
+
+    if (editedTag != null) {
+      final transaction = Transactions.getTag();
+      transaction.put(tag.key, editedTag);
+    }
+  }
+
+  void _deleteTag(Tag tag) async
+  {
+    AlertDialog removeConfirmation = AlertDialog(
+      title: const Text("Usuń tag"),
+      content: Text("Czy na pewno chcesz usunąć ${tag.label}?"),
+      actions: [
+        TextButton(
+            child: const Text("Anuluj"),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            }),
+        TextButton(
+            child: const Text("Usuń"),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            })
+      ],
+    );
+
+    bool? userResponse = await showDialog<bool?>(
+        context: context,
+        builder: (BuildContext context) => removeConfirmation);
+
+    if (userResponse != null && userResponse) {
+      final transaction = Transactions.getTag();
+      transaction.delete(tag.key);
+      _checkedTags.remove(tag);
+    }
+  }
+
   @override
   void initState() {
     if (widget.checkedTags != null) {
@@ -113,10 +159,10 @@ class _ManageTagsState extends State<ManageTags> {
                           children: [
                             IconButton(
                                 icon: const Icon(Icons.delete),
-                                onPressed: () => print("DELETE")),
+                                onPressed: () => _deleteTag(tag)),
                             IconButton(
                                 icon: const Icon(Icons.edit),
-                                onPressed: () => print("EDIT")),
+                                onPressed: () => _editTag(tag)),
                           ],
                         ))
                   ],
