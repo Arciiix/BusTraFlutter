@@ -1,4 +1,5 @@
 import 'package:bustra/manage_tags.dart';
+import 'package:bustra/map_picker.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/transactions.dart';
 import 'package:bustra/utils/get_bus_stop_tags.dart';
@@ -208,7 +209,6 @@ class _BusStopFormState extends State<BusStopForm> {
                             ? "Nazwa nie może być pusta"
                             : null;
                       }),
-                  
                 ),
                 Padding(
                     padding: const EdgeInsets.all(10),
@@ -292,6 +292,46 @@ class _BusStopFormState extends State<BusStopForm> {
                                     children: const [
                                       Icon(Icons.paste),
                                       Text("Wklej koordynaty")
+                                    ]))),
+                        Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  LatLng? selectedLocation =
+                                      await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                               MapPicker(
+                                              initialLocation: double.tryParse(
+                                                              _destinationBusStopLatitudeController
+                                                                  .text) !=
+                                                          null &&
+                                                      double.tryParse(_destinationBusStopLongitudeController.text) !=
+                                                          null
+                                                  ? LatLng(
+                                                      double.parse(
+                                                          _destinationBusStopLatitudeController.text),
+                                                      double.parse(_destinationBusStopLongitudeController.text))
+                                                  : null)
+                                              fullscreenDialog: true));
+
+                                  if (selectedLocation != null) {
+                                    setState(() {
+                                      _destinationBusStopLatitudeController
+                                              .text =
+                                          selectedLocation.latitude.toString();
+                                      _destinationBusStopLongitudeController
+                                              .text =
+                                          selectedLocation.longitude.toString();
+                                    });
+                                  }
+                                },
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.location_on),
+                                      Text("Wybierz na mapie")
                                     ])))
                       ],
                     )),
@@ -375,6 +415,42 @@ class _BusStopFormState extends State<BusStopForm> {
                                     children: const [
                                       Icon(Icons.paste),
                                       Text("Wklej koordynaty")
+                                    ]))),
+                        Padding(
+                            padding: const EdgeInsets.all(5),
+                            child: ElevatedButton(
+                                onPressed: () async {
+                                  LatLng? selectedLocation = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (BuildContext context) => MapPicker(
+                                              initialLocation: double.tryParse(
+                                                              _previousBusStopLatitudeController
+                                                                  .text) !=
+                                                          null &&
+                                                      double.tryParse(_previousBusStopLongitudeController.text) !=
+                                                          null
+                                                  ? LatLng(
+                                                      double.parse(
+                                                          _previousBusStopLatitudeController.text),
+                                                      double.parse(_previousBusStopLongitudeController.text))
+                                                  : null),
+                                          fullscreenDialog: true));
+
+                                  if (selectedLocation != null) {
+                                    setState(() {
+                                      _previousBusStopLatitudeController.text =
+                                          selectedLocation.latitude.toString();
+                                      _previousBusStopLongitudeController.text =
+                                          selectedLocation.longitude.toString();
+                                    });
+                                  }
+                                },
+                                child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: const [
+                                      Icon(Icons.location_on),
+                                      Text("Wybierz na mapie")
                                     ])))
                       ],
                     )),
@@ -393,8 +469,18 @@ class _BusStopFormState extends State<BusStopForm> {
                           (int id) {
                             Tag tag = _tags[id];
                             return Chip(
-                              label: Text(tag.label, style: TextStyle(color:Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white)),
-                              deleteIcon: Icon(Icons.close, color: Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white),
+                              label: Text(tag.label,
+                                  style: TextStyle(
+                                      color:
+                                          Color(tag.color).computeLuminance() >
+                                                  0.5
+                                              ? Colors.black
+                                              : Colors.white)),
+                              deleteIcon: Icon(Icons.close,
+                                  color:
+                                      Color(tag.color).computeLuminance() > 0.5
+                                          ? Colors.black
+                                          : Colors.white),
                               onDeleted: () => setState(() {
                                 _tags.remove(tag);
                               }),

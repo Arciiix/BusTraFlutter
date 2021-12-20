@@ -1,4 +1,5 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:bustra/map_picker.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/select_bus_stop.dart';
 import 'package:bustra/settings.dart';
@@ -87,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
         //TODO: Maybe throw an error?
       }
     }
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        setState(() {
-        appVersion = packageInfo.version + "/" + packageInfo.buildNumber;  
-        });
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    setState(() {
+      appVersion = packageInfo.version + "/" + packageInfo.buildNumber;
+    });
   }
 
   void _selectBusStop(BuildContext context) async {
