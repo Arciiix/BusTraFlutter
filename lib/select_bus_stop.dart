@@ -1,14 +1,15 @@
 import 'package:bustra/bus_stop_form.dart';
+import 'package:bustra/bus_stop_from_list.dart';
 import 'package:bustra/transactions.dart';
+import 'package:bustra/utils/bus_stop_types.dart';
 import 'package:bustra/utils/get_bus_stop_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
-import 'models/bus_stop.dart';
-
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import "package:bustra/utils/show_snackbar.dart";
 
+import 'models/bus_stop.dart';
 import 'models/tag.dart';
 
 class SelectBusStop extends StatefulWidget {
@@ -17,11 +18,12 @@ class SelectBusStop extends StatefulWidget {
 }
 
 class _SelectBusStopState extends State<SelectBusStop> {
-  Future<void> _createBusStop() async {
+  Future<void> _createBusStop({bool fromList = true}) async {
     BusStopUnsaved? busStop = await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (BuildContext context) => BusStopForm(),
+            builder: (BuildContext context) =>
+                fromList ? BusStopFromList() : BusStopForm(),
             fullscreenDialog: true));
 
     if (busStop != null) {
@@ -114,9 +116,29 @@ class _SelectBusStopState extends State<SelectBusStop> {
     return Container(
         child: Scaffold(
       appBar: AppBar(title: const Text("Wybierz przystanek")),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => _createBusStop(),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        curve: Curves.bounceIn,
+        overlayColor: Colors.black,
+        overlayOpacity: 0.5,
+        spacing: 20,
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.add_location),
+            label: "Dodaj ręcznie",
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            onTap: () => _createBusStop(fromList: false),
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.list),
+            label: "Wybierz z listy",
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            onTap: () => _createBusStop(fromList: true),
+          ),
+        ],
       ),
       body: ValueListenableBuilder<Box<BusStop>>(
           valueListenable: Transactions.getBusStop().listenable(),
@@ -205,8 +227,13 @@ class _SelectBusStopState extends State<SelectBusStop> {
                                         Tag tag = tags[id];
                                         return Chip(
                                           label: Text(tag.label,
-                                              overflow: TextOverflow.ellipsis, 
-                                              style: TextStyle(color:Color(tag.color).computeLuminance() > 0.5 ? Colors.black : Colors.white)),
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Color(tag.color)
+                                                              .computeLuminance() >
+                                                          0.5
+                                                      ? Colors.black
+                                                      : Colors.white)),
                                           backgroundColor:
                                               Color(tag.color).withOpacity(1),
                                         );

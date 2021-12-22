@@ -2,6 +2,7 @@ import 'package:bustra/manage_tags.dart';
 import 'package:bustra/map_picker.dart';
 import 'package:bustra/models/bus_stop.dart';
 import 'package:bustra/transactions.dart';
+import 'package:bustra/utils/bus_stop_types.dart';
 import 'package:bustra/utils/get_bus_stop_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,8 +34,6 @@ class _BusStopFormState extends State<BusStopForm> {
   final TextEditingController _previousBusStopLongitudeController =
       TextEditingController();
   List<Tag> _tags = [];
-
-  int _stepperStep = 0;
 
   @override
   void initState() {
@@ -513,11 +512,4 @@ class _BusStopFormState extends State<BusStopForm> {
               ])),
             )));
   }
-}
-
-class BusStopUnsaved {
-  BusStop busStopObj;
-  List<Tag> tags;
-
-  BusStopUnsaved(this.busStopObj, this.tags);
 }
